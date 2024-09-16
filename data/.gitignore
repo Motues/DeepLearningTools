@@ -1,0 +1,24 @@
+# Pictures
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.psd
+*.ai
+*.eps
+*.svg
+*.tif
+*.tiff
+*.ico
+*.bmp
+*.webp
+*.raw
+*.cr2
+*.nef
+*.orf
+*.sr2
+*.dng
+*.arw
+*.dcr
+*.rw2
+*.pef
