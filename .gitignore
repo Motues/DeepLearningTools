@@ -6,3 +6,7 @@
 
 # data
 # data/
+
+# Models and weights
+models/
+weights/
