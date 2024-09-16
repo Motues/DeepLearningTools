@@ -1,9 +1,11 @@
 import torch
+import torchvision
 from torch.utils.data import Dataset, DataLoader
 from torch import nn
-from torchvision import transforms, utils
+from torchvision import transforms
 import torch.optim as optim
 from PIL import Image
+from torchvision import utils
 import os
 
 class MyData(Dataset):
@@ -22,6 +24,19 @@ class MyData(Dataset):
 
     def __len__(self):
         return len(self.image_path)
+
+class MLP(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.input_layer = nn.Sequential(nn.Flatten(), nn.Linear(28 * 28, 64), nn.ReLU())
+        self.hidden_layer = nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64, 64), nn.ReLU())
+        self.output_layer = nn.Sequential(nn.Linear(64, 10))
+
+    def forward(self, x):
+        x = self.input_layer(x)
+        x = self.hidden_layer(x)
+        x = self.output_layer(x)
+        return x
 
 class LeNet(nn.Module):
     def __init__(self):
@@ -48,46 +63,24 @@ class LeNet(nn.Module):
 
 
 
-train_dir = "../data/FashionMNIST/train"
+labels = ['t-shirt', 'trouser', 'pullover', 'dress', 'coat',
+               'sandal', 'shirt', 'sneaker', 'bag', 'ankle boot']
+
+
+
+net = torch.load('model/LeNet_FashionMNIST.pth')
+net.eval()
+
 test_dir = "../data/FashionMNIST/test"
 toTensor = transforms.Compose([transforms.ToTensor()])
-train_dataset = MyData(train_dir)
+toImage = transforms.Compose([transforms.ToPILImage()])
 test_dataset = MyData(test_dir)
-
-train_loader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=True)
 test_loader = DataLoader(dataset=test_dataset, batch_size=32, shuffle=True)
-'''
-net= LeNet()
-x = torch.rand(size=(1, 1, 28, 28), dtype=torch.float)
-for layer in net.children():
-    x = layer(x)
-    print(layer.__class__.__name__, 'output shape: ', x.shape)
-'''
-net = LeNet()
-lr = 0.001
-Loss = nn.CrossEntropyLoss()
-epoch_number = 4
-optimizer = optim.Adam(net.parameters(), lr=lr)
-step = 0
-for epoch in range(epoch_number):
-    for x, y in train_loader:
-        y_hat = net(x)
-        loss = Loss(y_hat, y)
-        optimizer.zero_grad()
-        loss.sum().backward()
-        optimizer.step()
-        step += 1
-        if step % 500 == 0:
-            print(f'loss: {float(loss.sum().item()):f} %')
-torch.save(net, '../model/LeNet.pth')
 
-net.eval()
 correct_num = 0
 wrong_num = 0
 total_num = 0
 step = 0
-labels = ['t-shirt', 'trouser', 'pullover', 'dress', 'coat',
-          'sandal', 'shirt', 'sneaker', 'bag', 'ankle boot']
 with torch.no_grad():
     for x, y in test_loader:
         y_hats = net(x)
@@ -103,7 +96,3 @@ with torch.no_grad():
         if step % 100 == 0:
             print(f'accuracy: {float(correct_num / total_num * 100):f} %')
 print(f'Final accuracy: {float(correct_num / total_num * 100):f} %')
-
-
-
-
