@@ -23,3 +23,7 @@ class DatasetMNIST(Dataset):
 
     def __len__(self):
         return len(self.image_path)
+
+def DataLoaderMNIST(root_dir, batch_size, shuffle):
+    dataset = DatasetMNIST(root_dir)
+    return torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)

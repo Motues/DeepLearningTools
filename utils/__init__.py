@@ -2,7 +2,7 @@
 
 from torchvision import transforms
 
-from .dataset import DatasetMNIST
+from .dataset import DataLoaderMNIST
 from .train import train_model
 from .eval import evaluate_model
 from .save import save_model
