@@ -3,6 +3,7 @@ import torchvision.transforms as transforms
 import torch
 from PIL import Image
 import os
+from torch.utils.data import DataLoader
 
 
 toTensor = transforms.Compose([transforms.ToTensor()])
@@ -24,6 +25,10 @@ class DatasetMNIST(Dataset):
     def __len__(self):
         return len(self.image_path)
 
-def DataLoaderMNIST(root_dir, batch_size, shuffle):
+def data_loader_mnist(root_dir, batch_size, shuffle):
     dataset = DatasetMNIST(root_dir)
-    return torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+
+ class DatasetNEUSeg(Dataset):
+     def __init__(self, root_dir):
+         self.root_dir = root_dir
