@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
+import numpy as np
 
 
 class DownsamplerBlock(nn.Module):
@@ -189,7 +190,6 @@ class ESNet(nn.Module):
             output = layer(output)
 
         output = self.output_conv(output)
-
         return output
 
 

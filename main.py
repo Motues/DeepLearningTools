@@ -1,17 +1,23 @@
 import torch
+from torchsummary import summary
 
-from model import MLPMNIST
-from utils import train_model, evaluate_model, DataLoaderMNIST
-
-
-train_dir = "D:/Desktop/Projects/Python Project/MyDeepLearning/data/MNIST/train"
-test_dir = "D:/Desktop/Projects/Python Project/MyDeepLearning/data/MNIST/test"
-
-train_loader = DataLoaderMNIST(train_dir, 32, True)
-test_loader = DataLoaderMNIST(test_dir, 32, False)
+from model import YOLO11_seg
+from utils import DataLoaderNEUSeg
+import numpy as np
 
 
-net = MLPMNIST()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = YOLO11_seg(nc=80)
+model = model.to(device)
 
-train_model(net, train_loader, 0.001, "CrossEntropyLoss", "Adam", 10)
-evaluate_model(net, test_loader)
+x = torch.randn(1, 3, 256, 256).to(device)
+y = model(x)
+for item in y:
+    print(type(item))
+    if isinstance(item, torch.Tensor):
+        print(item.shape)
+    elif isinstance(item, list):
+        print(len(item))
+        for i in item:
+            print(i.shape)
+

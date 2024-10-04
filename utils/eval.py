@@ -1,5 +1,4 @@
 import torch
-from torch.xpu import device
 
 
 def evaluate_model(model, test_loader):
@@ -27,4 +26,3 @@ def evaluate_model(model, test_loader):
             if step % 100 == 0:
                 print(f'accuracy: {float(correct_num / total_num * 100):f} %')
     print(f'Final accuracy: {float(correct_num / total_num * 100):f} %')
-
